@@ -26,46 +26,69 @@ c_names = c('id','password','interaction')
 ####
 
 
-result_df = data.frame(df_name=character(),
-                       result=character())
+result_df = vector()
 
 
 
 
 
-
-
-if(iter_num == 1){
-  ######-----------------------------------------
-  ## a) Read in ith file
-  ######-----------------------------------------
-  final_df = read_excel(imp_files[iter_num])
-
-} else {
+for(iter_num in 1:length(imp_files)){
+  
+  if(iter_num == 1){
+    ######-----------------------------------------
+    ## a) Read in ith file
+    ######-----------------------------------------
+    final_df = read_excel(imp_files[iter_num])
+    ######-----------------------------------------
+    ## b) Add column based on date to both data sets
+    ######-----------------------------------------
+    final_df$imp_var = rep(iter_num,nrow(final_df))
+    
+    result_df[iter_num,1] = imp_files[iter_num]
+    tmp_result = c(imp_files[iter_num],'Success')
+    
+  } else {
+    
+    ######-----------------------------------------
+    ## a) Upload df
+    ######-----------------------------------------  
+    data_tmp = read_excel(imp_files[iter_num])
+    
+    
+    ######-----------------------------------------
+    ## b) Check Dimensions of new dataframes
+    ######-----------------------------------------
+    col_number_check = ncol(data_tmp) == ncol(final_df)
+    
+    ######-----------------------------------------
+    ## c) Check if columns are the same after first df
+    ######-----------------------------------------
+    col_name_check = identical(colnames(data_tmp),
+                               colnames(final_df)[-nrow(final_df)])
+    ######-----------------------------------------
+    ## d) Add column based on date to both data sets
+    ######-----------------------------------------
+    data_tmp$imp_var = rep(iter_num,nrow(data_tmp))
+  }
+  
   
   ######-----------------------------------------
-  ## b) Check Dimensions of new dataframes
+  ## f) Add new dataframe to overall dataframe
+  ## Checks to determine if dfs are right to be combined
+  ## If not a message states why
   ######-----------------------------------------
-  col_num_check = ncol(data_tmp) == ncol(final_df)
-  
-  data_tmp = read_excel(imp_files[iter_num])
-  ######-----------------------------------------
-  ## ***  c) Check if columns are the same after first df
-  ######-----------------------------------------
-  col_name_check = identical(colnames(data_tmp),
-                             colnames(final_df)[-nrow(final_df)])
+  if(iter_num > 1 &  col_name_check == T & col_number_check == T){
+    final_df = rbind(final_df,data_tmp)
+    tmp_result <- c(imp_files[iter_num],'Success')
+  } else if (iter_num > 1 &  col_name_check == F & col_number_check == T){
+    tmp_result <- c(imp_files[iter_num],'Wrong Column Names')
+    
+  } else if (iter_num > 1 &  col_name_check == T & col_number_check == F){
+    tmp_result <- c(imp_files[iter_num],'Wrong # of Columns')
+  } else {
+    tmp_result <- c(imp_files[iter_num],'Wrong # of Columns and Wrong Column Names')
+  }
+  result_df = rbind(result_df,tmp_result)
 }
-
-######-----------------------------------------
-## d) Add column based on date to both data sets
-######-----------------------------------------
-data_tmp$imp_var = rep(iter_num,nrow(data_tmp))
-
-######-----------------------------------------
-## f) Add new dataframe to overall dataframe
-######-----------------------------------------
-final_df = rbind(data_until_0213,data_tmp)
-
-
 
 
