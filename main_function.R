@@ -21,8 +21,6 @@ c_names = c('id','password','interaction')
 ####
 ## Function
 ## Input 1: List of files that should be into dataframe 
-## Input 2: Number of columns of final dataframe
-## Input 3: Columns are already known
 ## Output 1: Combined dataframe
 ## Output 2: Result of adding dataframe
 ####
@@ -37,52 +35,37 @@ result_df = data.frame(df_name=character(),
 
 
 
+if(iter_num == 1){
+  ######-----------------------------------------
+  ## a) Read in ith file
+  ######-----------------------------------------
+  final_df = read_excel(imp_files[iter_num])
 
-iter_num = 1
-
-######-----------------------------------------
-## a) Read in ith file
-######-----------------------------------------
-data_tmp = read_excel(imp_files[iter_num])
-
-######-----------------------------------------
-## b) Check Dimensions of new dataframes
-######-----------------------------------------
-col_num_check = ncol(data_tmp) == number_columns
-
-
-######-----------------------------------------
-## ***  c) Check if columns are the same after first df
-######-----------------------------------------
-
-if(not first df)
+} else {
+  
+  ######-----------------------------------------
+  ## b) Check Dimensions of new dataframes
+  ######-----------------------------------------
+  col_num_check = ncol(data_tmp) == ncol(final_df)
+  
+  data_tmp = read_excel(imp_files[iter_num])
+  ######-----------------------------------------
+  ## ***  c) Check if columns are the same after first df
+  ######-----------------------------------------
   col_name_check = identical(colnames(data_tmp),
-                      colnames(final_df)[-nrow(final_df)])
-
-
-
-
-
-
+                             colnames(final_df)[-nrow(final_df)])
+}
 
 ######-----------------------------------------
 ## d) Add column based on date to both data sets
 ######-----------------------------------------
 data_tmp$imp_var = rep(iter_num,nrow(data_tmp))
 
-
-
 ######-----------------------------------------
 ## f) Add new dataframe to overall dataframe
 ######-----------------------------------------
-data_until_0227 = rbind(data_until_0213,data_20170227)
+final_df = rbind(data_until_0213,data_tmp)
 
 
-######-----------------------------------------
-## g) Check Dimensions of new dataframe 
-######-----------------------------------------
-dim(data_until_0227)[1]
-dim(data_until_0213)[1] + dim_0227[1]
-##--------------------------------------------
 
 
