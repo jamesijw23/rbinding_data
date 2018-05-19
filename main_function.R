@@ -13,6 +13,9 @@ number_columns = 3
 ## This can be committed to be used by reading 1 file and observe
 c_names = c('id','password','interaction')
 
+
+## Will have to change column that represents file
+
 ##-------------------------------------------
 
 ####
@@ -35,12 +38,12 @@ result_df = data.frame(df_name=character(),
 
 
 
-
+iter_num = 1
 
 ######-----------------------------------------
 ## a) Read in ith file
 ######-----------------------------------------
-data_tmp = read_excel(imp_files[1])
+data_tmp = read_excel(imp_files[iter_num])
 
 ######-----------------------------------------
 ## b) Check Dimensions of new dataframes
@@ -49,22 +52,24 @@ col_num_check = ncol(data_tmp) == number_columns
 
 
 ######-----------------------------------------
-## c) Check if columns are the same after first df
+## ***  c) Check if columns are the same after first df
 ######-----------------------------------------
-col_name_check = identical(colnames(data_tmp),
+
+if(not first df)
+  col_name_check = identical(colnames(data_tmp),
                       colnames(final_df)[-nrow(final_df)])
+
+
+
+
 
 
 
 ######-----------------------------------------
 ## d) Add column based on date to both data sets
 ######-----------------------------------------
-data_tmp$imp_var = rep('02-27-2017',nrow(data__tmp))
+data_tmp$imp_var = rep(iter_num,nrow(data_tmp))
 
-######-----------------------------------------
-## e) Check if columns are the same
-######-----------------------------------------
-(check_32 = identical(colnames(data_20170227),colnames(data_until_0213)))
 
 
 ######-----------------------------------------
